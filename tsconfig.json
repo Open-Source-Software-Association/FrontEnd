@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "esnext",                 // 编译目标为最新 ES 标准（如 ES2023+）
+    "useDefineForClassFields": true,    // 类字段遵循 ECMA 标准（替代旧版行为）
+    "module": "esnext",                 // 输出模块为 ESM 格式（支持动态导入）
+    "moduleResolution": "node",         // 按 Node.js 规则解析模块（优先找 `index.ts`）
+    "strict": true,                     // 启用所有严格类型检查（如禁止隐式 any）
+    "sourceMap": true,                  // 生成源码映射（方便调试）
+    "resolveJsonModule": true,          // 允许导入 JSON 文件（如配置）
+    "esModuleInterop": true,            // 兼容 CommonJS 和 ESM 模块（如 `require` 导入）
+    "lib": ["esnext", "dom"],           // 包含 ES 和 DOM 类型（如 `document`）
+    "baseUrl": ".",                     // 根目录为项目根路径（`.` 表示当前目录）
+    "allowJs": true,                    // 允许编译 .js 文件（混合 TS/JS 项目）
+    "skipLibCheck": true,               // 跳过第三方库类型检查（提升编译速度）
+    "allowSyntheticDefaultImports": true, // 允许无默认导出的模块按需导入（如 `import React from 'react'`）
+    "forceConsistentCasingInFileNames": true, // 强制文件名大小写敏感（避免系统差异）
+    "jsx": "preserve",                  // 保留 JSX 语法（由 Vue/React 处理）
+    "jsxFactory": "h",                  // Vue 3 的 JSX 工厂函数（兼容 Vue 模板）
+    "jsxFragmentFactory": "Fragment",   // JSX Fragment 语法（如 `<></>`）
+    "paths": {                          // 路径别名映射
+      "@/*": ["src/*"]                  // `@/` 表示 `src/` 目录（解决图片中的模块路径问题）
+    },
+    "types": ["vite/client", "element-plus/global"] // 引入 Vite 和 Element Plus 的类型声明
+  },
+  "include": ["mock/**/*.ts", "src/**/*.ts", "src/**/*.vue", "vite.config.ts"], // 处理这些路径下的文件
+  "exclude": ["node_modules", "dist", "**/*.js"] // 忽略 node_modules、dist 和所有 .js 文件
+}
