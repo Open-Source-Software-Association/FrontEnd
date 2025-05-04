@@ -29,6 +29,8 @@ export interface UpdatePwdDTO {
 export interface InfoVO {
     userId: number;
     roleId: number;
+    clubId: number;
+    departmentId: number;
     phone: string;
     nickName: string;
     email: string;
