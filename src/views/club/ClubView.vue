@@ -2,7 +2,7 @@
   <el-card class="form-card">
     <template #header>
       <div><strong>社团：</strong>{{ club?.clubName || '加载中...' }}</div>
-      <div><strong>创建人：</strong>{{ club?.founderUserName || '未知' }}</div>
+      <div><strong>创建人：</strong>{{ club?.founderUserName || '，，，，' }}</div>
     </template>
 
     <div><strong>简介：</strong>{{ club?.description || '暂无' }}</div>
