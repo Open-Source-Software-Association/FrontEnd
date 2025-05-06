@@ -7,12 +7,15 @@
         <input v-model="password" placeholder="Password" type="password" required />
         <button class="login" type="submit">login</button>
       </form>
-      <!--      <div class="fn">-->
-      <!--        <button class="regist" type="button" @click="navigateToRegister">regist</button>-->
-      <!--      </div>-->
+
+      <!-- ✅ 注册跳转入口 -->
+      <div class="register-link">
+        <span>还没有账号？</span>
+        <a @click="navigateToRegister">点击注册</a>
+      </div>
     </div>
     <div class="left">
-      <img src="@/assets/images/log.png" alt="log" class="login"/>
+      <img src="@/assets/images/log.png" alt="log" class="login" />
     </div>
   </div>
 </template>
@@ -22,72 +25,47 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import { ElMessage } from 'element-plus'
-import {
-  userLoginService,
-  getUserInfoService,
-} from '@/apis/users';
-
-import type {
-  LoginDTO,
-  LoginVO,
-  InfoVO
-} from '@/types/users';
-
-import type {Result} from "@/apis/common";
+import { userLoginService, getUserInfoService } from '@/apis/users';
+import type { LoginDTO, LoginVO, InfoVO } from '@/types/users';
+import type { Result } from "@/apis/common";
 
 const router = useRouter();
 const authStore = useAuthStore();
 
-// 表单数据
-const jobNumber = ref<string>('');
-const password = ref<string>('');
+const jobNumber = ref('');
+const password = ref('');
 
-// 登录操作（已优化为 async/await）
+// 登录操作
 const login = async () => {
   try {
-    // 1. 执行登录
-    const loginData: LoginDTO = {
-      jobNumber: jobNumber.value,
-      password: password.value
-    };
-
-    console.log(loginData)
+    const loginData: LoginDTO = { jobNumber: jobNumber.value, password: password.value };
     const loginResponse: Result<LoginVO> = await userLoginService(loginData);
 
-    // 2. 处理登录响应
-    if (loginResponse.code !==200 || !loginResponse.data.token) {
+    if (loginResponse.code !== 200 || !loginResponse.data?.token) {
       ElMessage.error(loginResponse.message || '登录失败');
-      console.error('登录失败:', loginResponse.message);
-      return; // 提前返回，不继续执行
+      return;
     }
 
-    // 3. 存储 Token
     authStore.setToken(loginResponse.data.token);
 
-    // 4. 获取用户信息
     const infoResponse: Result<InfoVO> = await getUserInfoService();
-
-    if (infoResponse?.code !== 200 || !infoResponse.data) {
+    if (infoResponse.code !== 200 || !infoResponse.data) {
       ElMessage.error(infoResponse.message || '用户信息获取失败');
-      console.error('用户信息获取失败:', infoResponse.message);
-      return; // 提前返回，不继续执行
+      return;
     }
 
-    // 5. 存储用户信息
     authStore.setUserInfo(infoResponse.data);
-
-    // 6. 跳转首页
     await router.replace('/');
   } catch (error) {
-    console.error('登录流程异常:', error instanceof Error ? error.message : error);
-    // 这里可以添加 UI 错误提示（如 Element Plus 的 ElMessage）
+    console.error('登录异常:', error);
+    ElMessage.error('登录异常，请稍后重试');
   }
 };
 
-// 注册跳转（根据注释状态判断是否需要保留）
-/* const navigateToRegister = () => {
-  router.push('/register');
-}; */
+// ✅ 注册页跳转逻辑
+const navigateToRegister = () => {
+  router.push('/Register');
+};
 </script>
 
 <style scoped>
@@ -104,8 +82,6 @@ const login = async () => {
 
 .right {
   width: 50%;
-  height: 100%;
-  float: right;
   padding: 3rem;
   box-sizing: border-box;
 }
@@ -116,12 +92,11 @@ const login = async () => {
   margin-bottom: 1rem;
 }
 
-.right input, .right select {
+.right input {
   width: 100%;
   height: 3rem;
   margin-bottom: 1rem;
   padding: 0 1rem;
-  box-sizing: border-box;
   border: none;
   border-radius: 0.5rem;
 }
@@ -140,15 +115,36 @@ const login = async () => {
   background-color: #0c7b84;
 }
 
-.login {
+/* ✅ 注册链接样式 */
+.register-link {
+  margin-top: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.register-link a {
+  color: #00ffff;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  text-decoration: underline;
+}
+
+.left {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left .login {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 </style>
 
 <style>
 body {
-  /* background: linear-gradient(rgba(0,0,0,0.5),rgba(16, 160, 173, 0.5)); */
   background-color: #ffffff;
 }
 </style>

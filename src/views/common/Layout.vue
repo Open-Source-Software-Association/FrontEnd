@@ -61,7 +61,7 @@ watch(() => route.path, (newPath) => {
 // 用户操作处理
 const handleCommand = (command: string) => {
   if (command === 'profile') {
-    router.push('/userInfo')
+    router.push('/user/info')
   } else if (command === 'logout') {
     authStore.clearAuth()
     router.replace('/login')

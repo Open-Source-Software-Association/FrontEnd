@@ -1,19 +1,31 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 
+// 公共页面
 const Layout = () => import('@/views/common/Layout.vue')
 const Login = () => import('@/views/common/Login.vue')
 const NotFound = () => import('@/views/common/NotFound.vue')
 const Register = () => import('@/views/common/Register.vue')
 const Home = () => import('@/views/common/Home.vue')
+
+// 管理页面
 const Role = () => import('@/views/management/role.vue')
 const Permissions = () => import('@/views/management/permission.vue')
+
+// 用户信息页面
+const UserInfo = () => import('@/views/user/UserInfo.vue')
+const UpdatePassword = () => import('@/views/user/UpdatePassword.vue')
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     },
     {
         path: '/',
@@ -23,20 +35,42 @@ const routes: Array<RouteRecordRaw> = [
             title: '首页'
         },
         children: [
-            { path: '/', name: 'Home', component: Home, meta: { title: '首页' } },
-
-            { path: '/management/permission',
+            {
+                path: '',
+                name: 'Home',
+                component: Home,
+                meta: { title: '首页' }
+            },
+            {
+                path: '/management/permission',
                 name: 'Permission',
                 component: Permissions,
                 meta: {
-                    title: '权限管理',
-                } },
+                    title: '权限管理'
+                }
+            },
             {
                 path: '/management/role',
                 name: 'RoleManagement',
                 component: Role,
                 meta: {
-                    title: '角色管理',
+                    title: '角色管理'
+                }
+            },
+            {
+                path: '/user/info',
+                name: 'UserInfo',
+                component: UserInfo,
+                meta: {
+                    title: '个人信息'
+                }
+            },
+            {
+                path: '/user/updatePassword',
+                name: 'UpdatePassword',
+                component: UpdatePassword,
+                meta: {
+                    title: '修改密码'
                 }
             }
         ]
@@ -44,11 +78,6 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/:catchAll(.*)',
         component: NotFound
-    },
-    {
-        path: '/Register',
-        name: 'Register',
-        component: Register
     }
 ]
 
@@ -57,11 +86,10 @@ const router = createRouter({
     routes
 })
 
-// 新增路由守卫
+// 路由守卫
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
 
-    // 需要登录的页面验证
     if (to.meta.requiresAuth) {
         if (authStore.token) {
             next()
@@ -71,13 +99,9 @@ router.beforeEach((to, from, next) => {
                 query: { redirect: to.fullPath }
             })
         }
-    }
-    // 已登录用户禁止访问登录/注册页
-    else if (['Login', 'Register'].includes(to.name as string) && authStore.token) {
+    } else if (['Login', 'Register'].includes(to.name as string) && authStore.token) {
         next({ name: 'Home' })
-    }
-    // 其他情况直接放行
-    else {
+    } else {
         next()
     }
 })

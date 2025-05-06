@@ -39,7 +39,7 @@ export interface InfoVO {
     gender: number;
     college: string;
     major: string;
-    grade: number;
+    grade: string;
 }
 
 export interface LoginVO {
