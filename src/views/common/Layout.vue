@@ -83,6 +83,12 @@ const menuItems = computed(() => {
       title: '权限管理',
       icon: IconMenu,
       requiredRole: 1
+    },
+    {
+      index: '/club/list',
+      title: '社团管理',
+      icon: IconMenu,
+      requiredRole: 1
     }
   ]
 
