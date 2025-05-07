@@ -13,12 +13,17 @@
       <el-button type="success" @click="toCreateClub">创建社团</el-button>
     </div>
 
-    <el-table :data="clubList" stripe style="width: 100%; margin-top: 16px;">
-      <el-table-column prop="clubId" label="ID" width="80" />
-      <el-table-column prop="clubName" label="社团名称" />
-      <el-table-column prop="description" label="描述" />
-      <el-table-column prop="founderUserName" label="创建人" />
-      <el-table-column label="Logo" width="100">
+    <el-table
+        :data="clubList"
+        stripe
+        style="width: 100%; margin-top: 16px;"
+        class="centered-table"
+    >
+      <el-table-column prop="clubId" label="ID" width="80" align="center" />
+      <el-table-column prop="clubName" label="社团名称" align="center" />
+      <el-table-column prop="description" label="描述" align="center" />
+      <el-table-column prop="founderUserName" label="创建人" align="center" />
+      <el-table-column label="Logo" width="100" align="center">
         <template #default="{ row }">
           <el-image
               v-if="row.logoUrl"
@@ -29,7 +34,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" width="300" align="center">
         <template #default="{ row }">
           <el-button size="small" type="primary" @click="toEdit(row.clubId)">编辑</el-button>
           <el-button size="small" type="info" @click="viewClub(row.clubId)">查看</el-button>
@@ -65,7 +70,6 @@ import { useRouter } from 'vue-router'
 import type { ClubVO } from '@/types/club'
 import type { AxiosResponse } from 'axios'
 
-// ✅ 本地状态
 const keyword = ref('')
 const clubList = ref<(ClubVO & { enabled?: boolean })[]>([])
 const pageNum = ref(1)
@@ -74,7 +78,6 @@ const total = ref(0)
 
 const router = useRouter()
 
-// ✅ 获取社团列表
 const fetchClubs = async () => {
   try {
     const res: AxiosResponse = await getClubListService({
@@ -84,12 +87,11 @@ const fetchClubs = async () => {
     })
 
     const result = res.data
-
     if (result.code === 0 || result.code === 200) {
       const records: ClubVO[] = result.data?.records || []
       clubList.value = records.map(item => ({
         ...item,
-        enabled: true // ⚠️ 模拟字段，后端没有提供可删此行
+        enabled: true
       }))
       total.value = result.data?.total ?? 0
     } else {
@@ -101,17 +103,14 @@ const fetchClubs = async () => {
   }
 }
 
-// ✅ 创建社团
 const toCreateClub = () => {
   router.push('/club/create')
 }
 
-// ✅ 编辑社团
 const toEdit = (id: number) => {
   router.push(`/club/edit/${id}`)
 }
 
-// ✅ 启用 / 禁用社团
 const toggleStatus = async (club: ClubVO & { enabled?: boolean }) => {
   const action = club.enabled ? '禁用' : '启用'
   try {
@@ -130,18 +129,13 @@ const toggleStatus = async (club: ClubVO & { enabled?: boolean }) => {
     } else {
       ElMessage.error(result.message || `${action}失败`)
     }
-  } catch {
-    // 用户取消弹窗
-  }
+  } catch {}
 }
 
-// ✅ 查看社团详情
 const viewClub = (clubId: number) => {
-  router.push(`/club/${clubId}/view`)
+  router.push(`/club/${clubId}/department`)
 }
 
-
-// ✅ 页面加载完成后初始化
 onMounted(fetchClubs)
 </script>
 
@@ -153,5 +147,12 @@ onMounted(fetchClubs)
   display: flex;
   align-items: center;
   gap: 12px;
+}
+.centered-table .el-table__cell {
+  text-align: center;
+}
+.centered-table thead th {
+  font-weight: bold !important;
+  text-align: center !important;
 }
 </style>

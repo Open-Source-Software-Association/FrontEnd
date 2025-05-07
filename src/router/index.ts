@@ -72,6 +72,34 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import('@/views/club/ClubView.vue') // 即将创建
             },
             {
+                path: '/activity/list',
+                name: 'ActivityList',
+                component: () => import('@/views/activity/ActivityList.vue'),
+                meta: { title: '社团活动管理' }
+            },
+            {
+                path: '/club/:clubId/activity/create',
+                name: 'ActivityCreate',
+                component: () => import('@/views/activity/ActivityCreate.vue'),
+                meta: {
+                    title: '创建社团活动'
+                }
+            },
+            {
+                path: '/club/:clubId/activity/edit/:activityId',
+                name: 'ActivityEdit',
+                component: () => import('@/views/activity/ActivityEdit.vue'),
+                meta: {
+                    title: '编辑社团活动'
+                }
+            },
+            {
+                path: '/club/:clubId/department',
+                name: 'ClubDepartment',
+                component: () => import('@/views/club/ClubDepartmentView.vue'),
+                meta: { title: '部门管理' }
+            },
+            {
                 path: '/management/permission',
                 name: 'Permission',
                 component: Permissions,

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import type { Result, IPage } from './common'
-import type { DepartmentsVO } from '@/types/department'
+import type { DepartmentsVO, CreateDepartmentDTO } from '@/types/department'
 
 export const getDepartmentsByClubIdService = (
     clubId: number,
@@ -16,3 +16,7 @@ export const getDepartmentsByClubIdService = (
 
 export const disableDepartmentService = (id: number) =>
     request.patch<Result<null>>(`/departments/disable/${id}`)
+
+export const createDepartmentService = (data: CreateDepartmentDTO): Promise<Result> => {
+    return request.post('/departments/create', data)
+}

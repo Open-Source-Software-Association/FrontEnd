@@ -8,7 +8,7 @@ export const getClubListService = (params: PaginationParams & { keyword?: string
 
 // 创建社团
 export const createClubService = (data: CreateClubDTO) =>
-    request.post<Result<null>>('/clubs/create', data)
+    request.post('/clubs/create', data)
 
 // 根据 ID 获取社团详情
 export const getClubByIdService = (clubId: number) =>

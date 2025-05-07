@@ -7,7 +7,7 @@ import {
   Close,
 } from '@element-plus/icons-vue'
 import { useAuthStore } from "@/stores/authStore"
-import { TagItem } from "@/types/system";
+import { TagItem } from "@/types/system"
 
 const route = useRoute()
 const router = useRouter()
@@ -73,6 +73,22 @@ const menuItems = computed(() => {
   const baseItems = [
     { index: '/', title: '首页', icon: IconMenu },
     {
+      index: 'club',
+      title: '社团管理',
+      icon: IconMenu,
+      requiredRole: 1,
+      children: [
+        { index: '/club/list', title: '社团列表' },
+        { index: '/club/1/department', title: '部门管理' } // 默认跳到社团1，你可以动态处理
+      ]
+    },
+    {
+      index: '/activity/list',
+      title: '社团活动',
+      icon: IconMenu,
+      requiredRole: 1
+    },
+    {
       index: '/management/role',
       title: '角色管理',
       icon: IconMenu,
@@ -81,12 +97,6 @@ const menuItems = computed(() => {
     {
       index: '/management/permission',
       title: '权限管理',
-      icon: IconMenu,
-      requiredRole: 1
-    },
-    {
-      index: '/club/list',
-      title: '社团管理',
       icon: IconMenu,
       requiredRole: 1
     }
@@ -102,7 +112,7 @@ const menuItems = computed(() => {
 <template>
   <!-- 顶部导航栏 -->
   <div class="navbar-container">
-    <div class="system-title">签到管理系统</div>
+    <div class="system-title">社团管理系统</div>
 
     <div class="user-info-section">
       <span class="user-jobNumber">{{ authStore.userInfo.jobNumber }}</span>
@@ -128,22 +138,36 @@ const menuItems = computed(() => {
           active-text-color="#409eff"
           router
       >
-        <el-menu-item
-            v-for="item in menuItems"
-            :key="item.index"
-            :index="item.index"
-            @click="addTag({
-              title: item.title,
-              path: item.index,
-              closable: item.index !== '/'
-            })"
-        >
-          <el-icon class="menu-icon">
-            <component :is="item.icon" />
-          </el-icon>
-          <span>{{ item.title }}</span>
-        </el-menu-item>
+        <template v-for="item in menuItems">
+          <!-- 子菜单 -->
+          <el-sub-menu v-if="item.children" :index="item.index" :key="item.index">
+            <template #title>
+              <el-icon><component :is="item.icon" /></el-icon>
+              <span>{{ item.title }}</span>
+            </template>
+            <el-menu-item
+                v-for="sub in item.children"
+                :key="sub.index"
+                :index="sub.index"
+                @click="addTag({ title: sub.title, path: sub.index, closable: true })"
+            >
+              {{ sub.title }}
+            </el-menu-item>
+          </el-sub-menu>
+
+          <!-- 普通菜单项 -->
+          <el-menu-item
+              v-else
+              :index="item.index"
+              :key="item.index"
+              @click="addTag({ title: item.title, path: item.index, closable: item.index !== '/' })"
+          >
+            <el-icon><component :is="item.icon" /></el-icon>
+            <span>{{ item.title }}</span>
+          </el-menu-item>
+        </template>
       </el-menu>
+
     </el-aside>
 
     <!-- 右侧内容区 -->
@@ -179,7 +203,6 @@ const menuItems = computed(() => {
 </template>
 
 <style scoped>
-/* 顶部导航栏 */
 .navbar-container {
   height: 64px;
   background: #1f2937;
@@ -188,7 +211,6 @@ const menuItems = computed(() => {
   justify-content: space-between;
   padding: 0 16px;
 }
-
 .system-title {
   color: #fff;
   font-size: 18px;
@@ -198,40 +220,27 @@ const menuItems = computed(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* 用户信息 */
 .user-info-section {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-.user-name {
-  color: #fff;
-  font-size: 14px;
-}
-
+.user-name,
 .user-jobNumber {
   color: #fff;
   font-size: 14px;
 }
-
-/* 主体布局 */
 .main-container {
   height: calc(100vh - 64px);
   display: flex;
 }
-
-/* 左侧菜单 */
 .aside-menu {
   width: 200px;
   background: #f1f3f6;
 }
-
 .menu-icon {
   margin-right: 8px;
 }
-
-/* 标签页 */
 .tabs-header {
   height: 48px;
   background: #fff;
@@ -239,14 +248,12 @@ const menuItems = computed(() => {
   padding: 0 16px;
   overflow-x: auto;
 }
-
 .tabs-container {
   display: flex;
   height: 100%;
   align-items: center;
   min-width: max-content;
 }
-
 .tag-item {
   height: 32px;
   padding: 0 12px;
@@ -260,13 +267,11 @@ const menuItems = computed(() => {
   cursor: pointer;
   transition: all 0.3s;
 }
-
 .active-tag {
   background: #f0f7ff;
   border-color: #c6e2ff;
   color: #409eff;
 }
-
 .close-icon {
   margin-left: 6px;
   font-size: 12px;
@@ -275,21 +280,16 @@ const menuItems = computed(() => {
 .close-icon:hover {
   color: #f56c6c;
 }
-
-/* 内容区域 */
 .content-wrapper {
   flex: 1;
   overflow: hidden;
 }
-
 .content-main {
   height: calc(100vh - 112px);
   padding: 16px;
   background: #f5f7f9;
   overflow: auto;
 }
-
-/* 用户头像 */
 .user-avatar {
   background: #e5e7eb;
   cursor: pointer;
@@ -298,8 +298,6 @@ const menuItems = computed(() => {
 .user-avatar:hover {
   opacity: 0.8;
 }
-
-/* 隐藏滚动条 */
 .scroll-container {
   scrollbar-width: none;
   -ms-overflow-style: none;
