@@ -76,23 +76,24 @@ const menuItems = computed(() => {
       index: 'club',
       title: '社团管理',
       icon: IconMenu,
-      requiredRole: 1,
+      requiredRole: [1, 2],
       children: [
         { index: '/club/list', title: '社团列表' },
-        { index: '/club/1/department', title: '部门管理' } // 默认跳到社团1，你可以动态处理
+        { index: '/club/1/department', title: '部门管理' }, // 默认跳到社团1，你可以动态处理
+        { index: '/club/1/file', title: '文件管理' }, // 默认跳到社团1，你可以动态处理
       ]
     },
     {
       index: '/activity/list',
       title: '社团活动',
       icon: IconMenu,
-      requiredRole: 1
+      requiredRole: [1, 2]
     },
     {
       index: '/management/role',
       title: '角色管理',
       icon: IconMenu,
-      requiredRole: 1
+      requiredRole: 2
     },
     {
       index: '/management/permission',
@@ -104,6 +105,9 @@ const menuItems = computed(() => {
 
   return baseItems.filter(item => {
     if (!('requiredRole' in item)) return true
+    if (Array.isArray(item.requiredRole)) {
+      return item.requiredRole.includes(authStore.userInfo?.roleId)
+    }
     return authStore.userInfo?.roleId === item.requiredRole
   })
 })

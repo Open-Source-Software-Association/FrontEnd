@@ -52,11 +52,12 @@ export const exportDepartmentMembersService = (
 
 // 获取部门成员列表
 export const getDepartmentMembersService = (
+    clubId: number,
     departmentId: number,
     pageNum = 1,
     pageSize = 100
 ): Promise<Result<IPage<ClubMemberFullInfoVO>>> => {
-    return request.get(`/clubMembers/listByDepartmentId/${departmentId}`, {
+    return request.get(`/clubMembers/listByDepartmentId/${clubId}/${departmentId}`, {
         params: { pageNum, pageSize }
     })
 }

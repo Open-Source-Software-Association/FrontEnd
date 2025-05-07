@@ -45,7 +45,7 @@ const loading = ref(false)
 
 const loadMembers = async () => {
   loading.value = true
-  const res = await getDepartmentMembersService(props.department.departmentId, 1, 1000)
+  const res = await getDepartmentMembersService(props.department.clubId, props.department.departmentId, 1, 1000)
   loading.value = false
   if (res.data.code === 0 || res.data.code === 200) {
     departmentMembers.value = res.data.data.records

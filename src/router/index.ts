@@ -94,6 +94,12 @@ const routes: Array<RouteRecordRaw> = [
                 }
             },
             {
+                path: '/club/:clubId/file',
+                name: 'ClubFile',
+                component: () => import('@/views/file/file.vue'),
+                meta: { title: '文件管理' }
+            },
+            {
                 path: '/club/:clubId/department',
                 name: 'ClubDepartment',
                 component: () => import('@/views/club/ClubDepartmentView.vue'),
