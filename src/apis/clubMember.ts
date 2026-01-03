@@ -61,3 +61,53 @@ export const getDepartmentMembersService = (
         params: { pageNum, pageSize }
     })
 }
+
+// 分配成员到部门
+export const assignClubMembersService = (
+    clubId: number,
+    departmentId: number,
+    userIds: number[]
+): Promise<Result> => {
+    return request.post(`/clubMembers/assign/${clubId}/${departmentId}`, userIds)
+}
+
+// 删除社团成员
+export const removeClubMemberService = (
+    clubId: number,
+    userId: number
+): Promise<Result> => {
+    return request.delete(`/clubMembers/remove/${clubId}/${userId}`)
+}
+
+// 修改成员角色
+export const updateMemberRoleService = (
+    clubId: number,
+    userId: number,
+    roleId: number
+): Promise<Result> => {
+    return request.put(`/clubMembers/updateRole/${clubId}/${userId}`, null, {
+        params: { roleId }
+    })
+}
+
+// 搜索社团成员
+export const searchClubMembersService = (
+    clubId: number,
+    keyword: string,
+    pageNum = 1,
+    pageSize = 100
+): Promise<Result<IPage<ClubMemberFullInfoVO>>> => {
+    return request.get(`/clubMembers/search/${clubId}`, {
+        params: { keyword, pageNum, pageSize }
+    })
+}
+
+// 批量删除社团成员
+export const batchRemoveClubMembersService = (
+    clubId: number,
+    userIds: number[]
+): Promise<Result> => {
+    return request.delete(`/clubMembers/batchRemove/${clubId}`, {
+        data: userIds
+    })
+}

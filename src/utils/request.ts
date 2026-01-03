@@ -11,7 +11,7 @@ import { useAuthStore } from '@/stores/authStore';
 const isDev = import.meta.env.MODE === 'development';
 
 const request = axios.create({
-    baseURL: isDev ? '/api/dev' : 'http://172.23.193.129:8080/api/dev',
+    baseURL: isDev ? '/api/dev' : 'http://localhost:8080/api/dev',
     timeout: 10000,
 });
 

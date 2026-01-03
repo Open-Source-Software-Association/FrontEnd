@@ -1,17 +1,23 @@
 <template>
   <div class="club-list">
-    <div class="toolbar">
-      <el-input
-          v-model="keyword"
-          placeholder="请输入社团名称关键词"
-          clearable
-          @clear="fetchClubs"
-          @keyup.enter="fetchClubs"
-          style="width: 250px;"
-      />
-      <el-button type="primary" @click="fetchClubs">搜索</el-button>
-      <el-button type="success" @click="toCreateClub">创建社团</el-button>
-    </div>
+      <div class="filter-section">
+        <el-input
+            v-model="keyword"
+            placeholder="搜索社团名称关键词"
+            clearable
+            @clear="fetchClubs"
+            @keyup.enter="fetchClubs"
+            style="width: 250px;"
+        />
+        <el-button type="primary" @click="fetchClubs">搜索</el-button>
+        <el-button 
+            type="success" 
+            @click="toCreateClub"
+            v-permission="'admin:createClub'"
+        >
+          创建社团
+        </el-button>
+      </div>
 
     <el-table
         :data="clubList"
@@ -42,6 +48,7 @@
               size="small"
               :type="row.enabled ? 'danger' : 'success'"
               @click="toggleStatus(row)"
+              v-permission="'admin:createClub'"
           >
             {{ row.enabled ? '禁用' : '启用' }}
           </el-button>

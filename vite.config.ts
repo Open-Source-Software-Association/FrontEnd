@@ -17,7 +17,7 @@ resolve: {
     port: 5173,            // 开发服务器端口
     proxy: {
       '/api': {            // 代理所有 /api 开头的请求
-        target: 'http://172.23.196.190:8080', // 后端地址
+        target: 'http://localhost:8080', // 后端地址
         changeOrigin: true,
         //rewrite: (path) => path.replace(/^\/api/, ''), // 移除 /api 前缀（按需调整）
       },

@@ -90,3 +90,24 @@ export const uploadAvatarService = async (formData: FormData): Promise<Result<nu
     })
     return response.data
 }
+
+// 根据关键字搜索用户（用于下拉选择）
+export const getUsersByKeywordService = async (
+    keyword: string,
+    pageNum = 1,
+    pageSize = 20
+): Promise<Result<IPage<InfoVO>>> => {
+    return request.get(`${API_PATH.SEARCH_USERS}`, {
+        params: { keyword, pageNum, pageSize }
+    })
+}
+
+// 获取所有用户列表
+export const getAllUsersService = async (
+    pageNum = 1,
+    pageSize = 20
+): Promise<Result<IPage<InfoVO>>> => {
+    return request.get('/users/getUsers', {
+        params: { pageNum, pageSize }
+    })
+}
