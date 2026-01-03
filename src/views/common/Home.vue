@@ -210,8 +210,20 @@ const loadDashboardStats = async () => {
       ElMessage.warning('获取统计数据失败')
     }
   } catch (error) {
-    console.error('加载统计数据失败:', error)
-    ElMessage.error('加载统计数据失败')
+    console.error('获取统计数据失败:', error)
+    // 检查是否是后端服务未启动的错误
+    if (error.message && error.message.includes('No static resource')) {
+      ElMessage.warning('后端服务未启动，请联系管理员')
+      // 设置默认值，避免页面显示异常
+      dashboardStats.value = {
+        totalClubs: 0,
+        totalMembers: 0,
+        monthlyActivities: 0,
+        pendingApprovals: 0
+      }
+    } else {
+      ElMessage.error('获取统计数据失败')
+    }
   } finally {
     statsLoading.value = false
   }
